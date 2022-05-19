@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.gdp.service.admin.api.fallback.SysUserFeignFallbackClient

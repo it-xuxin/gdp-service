@@ -1,0 +1,4 @@
+spring:
+  security:
+    whites:
+      - /auth/fegin/test

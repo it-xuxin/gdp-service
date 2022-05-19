@@ -1,0 +1,38 @@
+spring:
+  security:
+    resource:
+      - 静态资源
+      - /favicon-*.png/*
+      - /api-docs
+      - /*.js
+      - /*.css
+      - /*.html
+      - /*.htm
+      - swagger*/*
+      - webjars/*
+      - /swagger-resources
+      - /favicon.ico
+      - /api/*/doc.html
+      - /api/*/swagger-resources
+      - /api/*/v2/api-docs
+      - /api/*/webjars/*/*
+      # 监控
+      - /actuator
+      - /actuator/health
+      - /actuator/health/*
+      - /actuator/info
+      - /actuator/env
+      - /actuator/httptrace
+      - /actuator/mappings
+      - /actuator/threaddump
+      - /actuator/heapdump
+      - /actuator/loggers
+      - /actuator/loggers/*
+      - /actuator/logfile
+      - /actuator/metrics
+      - /actuator/metrics/*
+      - /actuator/beans
+      - /actuator/caches
+      - /actuator/configprops
+      - /actuator/scheduledtasks
+      - /actuator/prometheus

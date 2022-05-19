@@ -1,0 +1,16 @@
+server:
+  port: 8802
+
+spring:
+  application:
+    name: gdp-service-auth
+  profiles:
+    active: dev
+
+feign:
+  okhttp:
+    enabled: true
+
+rsa:
+  publicKey: 123456
+
