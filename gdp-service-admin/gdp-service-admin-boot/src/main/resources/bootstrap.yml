@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: gdp-service-user-boot
+  profiles:
+    active: dev
+
+server:
+  port: 8804

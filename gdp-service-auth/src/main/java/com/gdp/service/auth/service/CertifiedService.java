@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.gdp.service.auth.security.core.clientdetails.ClientDetailsServiceImpl;
 import com.gdp.service.auth.security.utils.RequestUtils;
+import com.gdp.service.common.core.constant.SecurityConstants;
 import com.gdp.service.common.core.result.IResultCode;
 import com.gdp.service.common.core.result.Result;
 import com.gdp.service.common.core.result.ResultCode;
@@ -55,7 +56,7 @@ public class CertifiedService {
         String clientId = RequestUtils.getOAuth2ClientId();
         if (StringUtils.isBlank(clientId)) {
             //return Result.failed(ResultCode.CLIENT_AUTHENTICATION_FAILED);
-           // return Response.failure("clientId参数缺失", Response.Status.PARAM_VALID_ERROR.getCode());
+            //return Result.failed("clientId参数缺失", Response.Status.PARAM_VALID_ERROR.getCode());
         }
         log.info("OAuth认证授权 客户端ID:{}，请求参数：{}", clientId, JSONUtil.toJsonStr(parameters));
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
@@ -72,9 +73,9 @@ public class CertifiedService {
          * 请求头自动填充，token必须原生返回，不能有任何包装，否则显示 undefined undefined
          * 账号/密码:  client_id/client_secret : client/123456
          */
-//        if (SpringSecurityConstants.TEST_CLIENT_ID.equals(clientId)) {
-//            return Response.ok(tokenEndpoint.postAccessToken(token, parameters).getBody());
-//        }
+        if (SecurityConstants.TEST_CLIENT_ID.equals(clientId)) {
+            return tokenEndpoint.postAccessToken(token, parameters).getBody();
+        }
 
         OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(token, parameters).getBody();
         accessToken.getAdditionalInformation().clear();

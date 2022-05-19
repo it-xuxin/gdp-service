@@ -21,12 +21,28 @@ public interface SecurityConstants {
 
     String REFRESH_TOKEN_KEY = "refresh_token";
 
+    String GRANT_TYPE_KEY = "grant_type";
+
     /**
      * 认证身份标识
      */
     String AUTHENTICATION_IDENTITY_KEY = "authenticationIdentity";
 
-    String GRANT_TYPE_KEY = "grant_type";
+    /**
+     * 验证码key前缀
+     */
+    String VALIDATE_CODE_PREFIX = "VALIDATE_CODE:";
+
+    /**
+     * 短信验证码key前缀
+     */
+    String SMS_CODE_PREFIX = "SMS_CODE:";
+
+
+    /**
+     * 接口文档 Knife4j 测试客户端ID
+     */
+    String TEST_CLIENT_ID = "client";
 
     /**
      * 系统管理 web 客户端ID

@@ -92,11 +92,7 @@
 <!--            <artifactId>spring-boot-starter-web</artifactId>-->
 <!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.gdp</groupId>
-            <artifactId>gdb-service-user-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
@@ -112,6 +108,17 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.gdp</groupId>
+            <artifactId>gdb-service-user-api</artifactId>
+            <version>${gdp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gdp</groupId>
+            <artifactId>gdp-service-admin-api</artifactId>
+            <version>${gdp.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
