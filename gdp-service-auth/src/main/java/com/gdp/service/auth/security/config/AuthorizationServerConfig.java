@@ -2,6 +2,7 @@ package com.gdp.service.auth.security.config;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.gdp.service.auth.security.extension.captcha.CaptchaTokenGranter;
 import com.gdp.service.common.core.constant.GlobalConstants;
 import com.gdp.service.common.core.constant.SecurityConstants;
 import com.gdp.service.auth.security.core.clientdetails.ClientDetailsServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,6 +47,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final AppUserDetailsServiceImpl appUserDetailsService;
     private final ClientDetailsServiceImpl clientDetailsService;
 
+    private final StringRedisTemplate stringRedisTemplate;
+
     @Value("${rsa.publicKey}")
     private String publicKey;
     @Override
@@ -65,6 +69,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.tokenStore(jwtTokenStore());
         // 获取原有默认授权模式(授权码模式、密码模式、客户端模式、简化模式)的授权者
         List<TokenGranter> granterList = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
+
+        // 添加验证码授权模式授权者
+        granterList.add(new CaptchaTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory(), authenticationManager, stringRedisTemplate
+        ));
 
         // 添加手机短信验证码授权模式的授权者
         granterList.add(new SmsCodeTokenGranter(endpoints.getTokenServices(), endpoints.getClientDetailsService(),

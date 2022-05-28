@@ -29,6 +29,11 @@ public interface SecurityConstants {
     String AUTHENTICATION_IDENTITY_KEY = "authenticationIdentity";
 
     /**
+     * JWT存储权限属性
+     */
+    String JWT_AUTHORITIES_KEY = "authorities";
+
+    /**
      * 验证码key前缀
      */
     String VALIDATE_CODE_PREFIX = "VALIDATE_CODE:";

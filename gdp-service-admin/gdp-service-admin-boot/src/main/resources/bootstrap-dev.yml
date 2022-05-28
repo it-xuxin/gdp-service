@@ -28,6 +28,10 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  redis:
+    url: redis://10.10.1.55:6379
+    database: 1
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

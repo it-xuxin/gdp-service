@@ -67,6 +67,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.gdp</groupId>
+            <artifactId>gdp-service-common-redis</artifactId>
+            <version>${gdp.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
         </dependency>
@@ -101,6 +107,11 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
+        <!-- 图片验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
 
     </dependencies>
 

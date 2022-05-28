@@ -1,14 +1,10 @@
 package com.gdp.service.auth.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.gdp.service.auth.security.core.clientdetails.ClientDetailsServiceImpl;
 import com.gdp.service.auth.security.utils.RequestUtils;
 import com.gdp.service.common.core.constant.SecurityConstants;
-import com.gdp.service.common.core.result.IResultCode;
-import com.gdp.service.common.core.result.Result;
-import com.gdp.service.common.core.result.ResultCode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
@@ -40,9 +36,27 @@ public class CertifiedService {
             return login(parameters);
         } catch (Exception e) {
             log.error("{}", Throwables.getStackTraceAsString(e));
-            throw new RuntimeException("error");
+            throw new RuntimeException("Login by code error.");
         }
     }
+
+    public OAuth2AccessToken loginByUsernamePassword(String username, String password, String code, String uuid){
+        try {
+            Map<String, String> parameters = Maps.newHashMap();
+            parameters.put("username", username);
+            parameters.put("password", password);
+            parameters.put("code", code);
+            parameters.put("uuid", uuid);
+            parameters.put("grant_type", "captcha");
+            return login(parameters);
+        } catch (Exception e) {
+            log.error("{}", Throwables.getStackTraceAsString(e));
+            throw new RuntimeException("Login by code error.");
+        }
+    }
+
+
+
 
 
     private OAuth2AccessToken login(Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
@@ -55,8 +69,7 @@ public class CertifiedService {
          */
         String clientId = RequestUtils.getOAuth2ClientId();
         if (StringUtils.isBlank(clientId)) {
-            //return Result.failed(ResultCode.CLIENT_AUTHENTICATION_FAILED);
-            //return Result.failed("clientId参数缺失", Response.Status.PARAM_VALID_ERROR.getCode());
+
         }
         log.info("OAuth认证授权 客户端ID:{}，请求参数：{}", clientId, JSONUtil.toJsonStr(parameters));
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
@@ -79,7 +92,6 @@ public class CertifiedService {
 
         OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(token, parameters).getBody();
         accessToken.getAdditionalInformation().clear();
-        //return Response.ok(accessToken);
         return accessToken;
     }
 }

@@ -1,0 +1,38 @@
+server:
+  port: 9999
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 获取JWT验签公钥请求路径
+          jwk-set-uri: 'http://127.0.0.1:9999/auth/oauth/getPublicKey'
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 启用自动根据服务ID生成路由
+          lower-case-service-id: true # 设置路由的路径为小写的服务ID
+      routes:
+        - id: gdp-service-auth
+          uri: lb://gdp-service-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: gdp-service-user-boot
+          uri: lb://gdp-service-user-boot
+          predicates:
+            - Path=/u/**
+          filters:
+            - StripPrefix=1
+
+  redis:
+    url: redis://10.10.1.55:6379
+    database: 1
+
+# 配置白名单路径
+white-list:
+  urls:
+    - "/auth/oauth/token"

@@ -16,7 +16,7 @@
 		<module>gdp-service-gateway</module>
         <module>gdp-service-user</module>
         <module>gdp-service-admin</module>
-    </modules>
+	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -36,6 +36,7 @@
 		<spring-cloud.version>2021.0.0</spring-cloud.version>
 		<spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
 
+		<kaptcha.version>2.3.2</kaptcha.version>
 		<lombok.version>1.18.18</lombok.version>
 		<hutool.version>5.7.21</hutool.version>
 		<jasypt.version>3.0.4</jasypt.version>
@@ -156,6 +157,13 @@
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>${swagger.version}</version>
+			</dependency>
+
+			<!-- 验证码 -->
+			<dependency>
+				<groupId>com.github.penggle</groupId>
+				<artifactId>kaptcha</artifactId>
+				<version>${kaptcha.version}</version>
 			</dependency>
 
 		</dependencies>

@@ -1,8 +1,6 @@
-package com.gdp.srevice.gateway.filter;
+package com.gdp.srevice.gateway.security;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
@@ -21,13 +19,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.util.pattern.PathPatternParser;
-import reactor.bool.BooleanUtils;
 import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
@@ -102,7 +98,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
             }
 
 
-            long expire = jsonPayload.getLong(AccessTokenConverter.EXP);
+            long expire = 111111L;//jsonPayload.getLong(AccessTokenConverter.EXP);
             long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
             if (expire <= currentSecond) {
                 log.warn("登录状态已过期:令牌为{}", token);
