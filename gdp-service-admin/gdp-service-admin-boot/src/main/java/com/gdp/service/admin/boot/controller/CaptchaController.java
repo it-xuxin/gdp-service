@@ -20,8 +20,8 @@ public class CaptchaController {
      *
      * @return
      */
-    @GetMapping("/")
-    public Result get() {
+    @GetMapping("/code")
+    public Result code() {
         return Result.success(captchaService.getCaptcha());
     }
 }

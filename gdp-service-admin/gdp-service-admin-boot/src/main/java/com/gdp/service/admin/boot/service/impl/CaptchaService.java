@@ -7,6 +7,7 @@ import com.gdp.service.admin.boot.service.ICaptchaService;
 import com.gdp.service.common.core.constant.SecurityConstants;
 import com.google.code.kaptcha.Producer;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class CaptchaService implements ICaptchaService {
@@ -29,6 +31,7 @@ public class CaptchaService implements ICaptchaService {
         String capText = producer.createText();
         String capStr = capText.substring(0, capText.lastIndexOf("@"));
         String code = capText.substring(capText.lastIndexOf("@") + 1);
+        log.info("captcha code = {}", code);
         BufferedImage image = producer.createImage(capStr);
         // 缓存验证码至Redis
         String uuid = IdUtil.simpleUUID();

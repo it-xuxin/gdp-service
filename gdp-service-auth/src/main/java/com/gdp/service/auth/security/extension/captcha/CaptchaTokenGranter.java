@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -43,7 +44,7 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
 
     @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
-        Map<String, String> parameters = tokenRequest.getRequestParameters();
+        Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
 
         String validateCode = parameters.get("code");
         String uuid = parameters.get("uuid");

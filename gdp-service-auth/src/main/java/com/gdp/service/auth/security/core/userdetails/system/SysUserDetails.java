@@ -1,11 +1,17 @@
 package com.gdp.service.auth.security.core.userdetails.system;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.gdp.service.admin.dto.AuthSysUserDTO;
+import com.gdp.service.auth.common.enums.PasswordEncoderTypeEnum;
+import com.gdp.service.common.core.constant.GlobalConstants;
 import com.gdp.service.common.core.enums.AuthIdentityEnum;
+import com.gdp.service.user.dto.UserAuthInfoDTO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
@@ -30,40 +36,53 @@ public class SysUserDetails implements UserDetails {
     private Boolean enabled;
     private Collection<SimpleGrantedAuthority> authorities;
 
-    
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    /**
+     * 系统管理用户
+     */
+    public SysUserDetails(AuthSysUserDTO user) {
+        this.setUserId(user.getUserId());
+        this.setUsername(user.getUsername());
+        this.setDeptId(user.getDeptId());
+        this.setPassword(PasswordEncoderTypeEnum.BCRYPT.getPrefix() + user.getPassword());
+        this.setEnabled(GlobalConstants.STATUS_YES.equals(user.getStatus()));
+        if (CollectionUtil.isNotEmpty(user.getRoles())) {
+            authorities = new ArrayList<>();
+            user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+        }
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
+    @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return this.enabled;
     }
 }

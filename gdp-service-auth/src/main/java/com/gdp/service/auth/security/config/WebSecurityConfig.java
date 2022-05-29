@@ -26,9 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService sysUserDetailsService;
-    private final UserDetailsService userDetailsService;
-    //    private final WxMaService wxMaService;
-//    private final MemberFeignClient memberFeignClient;
+    private final UserDetailsService appUserDetailsService;
     private final StringRedisTemplate redisTemplate;
     private final JsonAuthenticationEntryPoint authenticationEntryPoint;
 
@@ -60,7 +58,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
-//        auth.authenticationProvider(wechatAuthenticationProvider()).
         auth.authenticationProvider(smsCodeAuthenticationProvider())
                 .authenticationProvider(daoAuthenticationProvider());
     }
@@ -73,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SmsCodeAuthenticationProvider smsCodeAuthenticationProvider() {
         SmsCodeAuthenticationProvider provider = new SmsCodeAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        provider.setUserDetailsService(appUserDetailsService);
         provider.setRedisTemplate(redisTemplate);
         return provider;
     }

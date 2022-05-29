@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gdp-service-user-boot
+    name: gdp-service-admin-boot
   profiles:
     active: dev
 

@@ -2,6 +2,7 @@ package com.gdp.service.admin.boot.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import lombok.Data;
  * 客户端实体
  */
 @Data
+@TableName(value = "sys_oauth_client")
 public class SysOAuthClient {
 
     @TableId(type = IdType.INPUT)

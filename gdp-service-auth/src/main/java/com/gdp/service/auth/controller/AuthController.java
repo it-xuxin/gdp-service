@@ -21,8 +21,8 @@ public class AuthController {
 
     @ApiOperation(value = "OAuth2认证", notes = "手机验证码登录入口")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "用户名", required = true),
-            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "用户密码", required = true)
+            @ApiImplicitParam(name = "mobile",  value = "手机号", required = true),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true)
     })
     @PostMapping("/login/mobile/code")
     public Object loginByCode(@RequestParam String mobile, @RequestParam String code) {

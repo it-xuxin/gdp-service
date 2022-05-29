@@ -8,13 +8,15 @@ import com.gdp.service.admin.dto.AuthClientDTO;
 import com.gdp.service.common.core.result.Result;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/oauth-clients")
+@AllArgsConstructor
 public class SysOAuthClientController {
 
-    private ISysOAuthClientService iSysOAuthClientService;
+    private final ISysOAuthClientService iSysOAuthClientService;
 
     @ApiOperation(value = "客户端详情")
     @ApiImplicitParam(name = "clientId", value = "客户端id", required = true, paramType = "path", dataType = "String")
@@ -25,6 +27,7 @@ public class SysOAuthClientController {
     }
 
     @ApiOperation(hidden = true, value = "获取 OAuth2 客户端认证信息", notes = "Feign 调用")
+    @ApiImplicitParam(name = "clientId", value = "客户端id", required = true, dataType = "String")
     @GetMapping("/getOAuth2ClientById")
     public Result<AuthClientDTO> getOAuth2ClientById(@RequestParam String clientId) {
         SysOAuthClient client = iSysOAuthClientService.getById(clientId);

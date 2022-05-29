@@ -64,9 +64,12 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
                 break;
             }
         }
+        if (isWhite){
+            return chain.filter(exchange);
+        }
 
         String token = getToken(exchange.getRequest());
-        if (StringUtils.isBlank(token)&& !isWhite) {
+        if (StringUtils.isBlank(token)) {
             log.warn("令牌不能为空");
             return ResponseUtils.writeErrorInfo(response, ResultCode.ACCESS_UNAUTHORIZED);
         }
@@ -76,7 +79,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
         if (StringUtils.isNotBlank(token)) {
             claims = JwtHelper.decode(token).getClaims();
             // 负载为空，不在白名单的请求
-            if (StringUtils.isBlank(claims) && !isWhite) {
+            if (StringUtils.isBlank(claims)) {
                 return ResponseUtils.writeErrorInfo(response, ResultCode.ACCESS_UNAUTHORIZED);
             }
             log.debug("令牌解析payload:{}", claims);
@@ -92,13 +95,13 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 
             userId = jsonPayload.getStr(GlobalConstants.HEADER_USER_ID);
             // 用户id为空并且不在白名单
-            if (StringUtils.isBlank(userId) && !isWhite) {
+            if (StringUtils.isBlank(userId)) {
                 log.warn("令牌验证失败,用户详情为{}", claims);
                 return ResponseUtils.writeErrorInfo(response, ResultCode.CLIENT_AUTHENTICATION_FAILED);
             }
 
 
-            long expire = 111111L;//jsonPayload.getLong(AccessTokenConverter.EXP);
+            long expire = 1111L;//jsonPayload.getLong(AccessTokenConverter.EXP);
             long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
             if (expire <= currentSecond) {
                 log.warn("登录状态已过期:令牌为{}", token);

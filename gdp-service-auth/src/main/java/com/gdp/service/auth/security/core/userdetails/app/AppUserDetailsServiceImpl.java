@@ -6,6 +6,7 @@ import com.gdp.service.common.core.result.ResultCode;
 import com.gdp.service.user.api.UserFeignClient;
 import com.gdp.service.user.dto.UserAuthInfoDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -14,14 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Primary
+@Service("appUserDetailsService")
 @RequiredArgsConstructor
 public class AppUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserFeignClient userFeignClient;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         return null;
     }
 

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ClientDetailsServiceImpl implements ClientDetailsService {
 
-    private OAuthClientFeignClient oAuthClientFeignClient;
+    private final OAuthClientFeignClient oAuthClientFeignClient;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {

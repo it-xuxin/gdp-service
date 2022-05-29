@@ -27,10 +27,12 @@ spring:
             - Path=/u/**
           filters:
             - StripPrefix=1
-
-  redis:
-    url: redis://10.10.1.55:6379
-    database: 1
+        - id: gdp-service-admin-boot
+          uri: lb://gdp-service-admin-boot
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
 
 # 配置白名单路径
 white-list:

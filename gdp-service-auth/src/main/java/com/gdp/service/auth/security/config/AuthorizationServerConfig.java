@@ -2,6 +2,7 @@ package com.gdp.service.auth.security.config;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.gdp.service.auth.security.core.userdetails.system.SysUserDetailsServiceImpl;
 import com.gdp.service.auth.security.extension.captcha.CaptchaTokenGranter;
 import com.gdp.service.common.core.constant.GlobalConstants;
 import com.gdp.service.common.core.constant.SecurityConstants;
@@ -46,11 +47,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final AuthenticationManager authenticationManager;
     private final AppUserDetailsServiceImpl appUserDetailsService;
     private final ClientDetailsServiceImpl clientDetailsService;
-
+    private final SysUserDetailsServiceImpl sysUserDetailsService;
     private final StringRedisTemplate stringRedisTemplate;
 
     @Value("${rsa.publicKey}")
     private String publicKey;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetailsService);
@@ -113,7 +115,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         // 多用户体系下，刷新token再次认证客户端ID和 UserDetailService 的映射Map
         Map<String, UserDetailsService> clientUserDetailsServiceMap = new HashMap<>();
-//        clientUserDetailsServiceMap.put(SecurityConstants.ADMIN_CLIENT_ID, sysUserDetailsService); // 系统管理客户端
+        clientUserDetailsServiceMap.put(SecurityConstants.ADMIN_CLIENT_ID, sysUserDetailsService); // 系统管理客户端
         clientUserDetailsServiceMap.put(SecurityConstants.APP_CLIENT_ID, appUserDetailsService); // Android、IOS、H5 移动客户端
 //        clientUserDetailsServiceMap.put(SecurityConstants.WEAPP_CLIENT_ID, memberUserDetailsService); // 微信小程序客户端
 
