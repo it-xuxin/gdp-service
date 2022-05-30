@@ -1,21 +1,15 @@
 spring:
   security:
     resource:
-      - 静态资源
+      # 静态资源
       - /favicon-*.png/*
-      - /api-docs
-      - /*.js
-      - /*.css
-      - /*.html
-      - /*.htm
-      - swagger*/*
-      - webjars/*
-      - /swagger-resources
-      - /favicon.ico
-      - /api/*/doc.html
-      - /api/*/swagger-resources
-      - /api/*/v2/api-docs
-      - /api/*/webjars/*/*
+      - /*/webjars/js/*.js
+      - /*/webjars/css/*.css
+      - /*/doc.html
+      - /*/swagger-resources
+      - /*/favicon.ico
+      - /*/v2/api-docs
+      - /*/webjars/*/*
       # 监控
       - /actuator
       - /actuator/health

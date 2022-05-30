@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.gdp.service.common.web.config.WebMvcConfig,\
+  com.gdp.service.common.web.config.FeignConfig,\
+  com.gdp.service.common.web.exception.GlobalExceptionHandler

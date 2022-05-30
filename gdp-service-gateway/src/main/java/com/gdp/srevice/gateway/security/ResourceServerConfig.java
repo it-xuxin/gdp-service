@@ -1,9 +1,11 @@
 package com.gdp.srevice.gateway.security;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import com.gdp.service.common.core.constant.SecurityConstants;
 import com.gdp.service.common.core.result.ResultCode;
+import com.gdp.srevice.gateway.config.AuthProperties;
 import com.gdp.srevice.gateway.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -42,6 +44,7 @@ import java.util.List;
 public class ResourceServerConfig {
 
     private final ResourceServerManager resourceServerManager;
+    private final AuthProperties authProperties;
     @Setter
     private List<String> ignoreUrls;
 
@@ -53,7 +56,7 @@ public class ResourceServerConfig {
         // 自定义处理JWT请求头过期或签名错误的结果
         http.oauth2ResourceServer().authenticationEntryPoint(authenticationEntryPoint());
         http.authorizeExchange()
-                // .pathMatchers(Convert.toStrArray(ignoreUrls)).permitAll()
+                .pathMatchers(Convert.toStrArray(authProperties.getResource())).permitAll()
                 .anyExchange().access(resourceServerManager)
                 .and()
                 .exceptionHandling()

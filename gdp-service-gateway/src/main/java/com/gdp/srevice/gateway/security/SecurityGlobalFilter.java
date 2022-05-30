@@ -34,6 +34,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.oauth2.jwt.JwtClaimNames.EXP;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -43,6 +45,9 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
     private static final PathPatternParser DEFAULT_PATTERN_PARSER = new PathPatternParser();
 
+//    public static void main(String[] args) {
+//        System.out.println(ANT_PATH_MATCHER.match("/*/webjars/js/*.js", "/u/webjars/js/chunk-069eb437.a0c9f0ca.js"));
+//    }
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
@@ -50,10 +55,18 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
 
         String url = exchange.getRequest().getURI().getPath();
-        log.debug("请求路径：" + url);
-//        log.debug("资源名单：" + JSONUtil.toJsonStr(authProperties.getResource()));
-//        log.debug("白名单：" + JSONUtil.toJsonStr(authProperties.getWhites()));
-//        log.debug("阻名单：" + JSONUtil.toJsonStr(authProperties.getBlocks()));
+        log.info("请求路径：" + url);
+        log.info("资源名单：" + JSONUtil.toJsonStr(authProperties.getResource()));
+        log.info("白名单：" + JSONUtil.toJsonStr(authProperties.getWhites()));
+        log.info("阻名单：" + JSONUtil.toJsonStr(authProperties.getBlocks()));
+
+        for (String resource : authProperties.getResource()) {
+            if (ANT_PATH_MATCHER.match(resource, url)) {
+                log.info("Match resource = {}, url = {}", resource, url);
+                return chain.filter(exchange);
+            }
+        }
+
 
         boolean isWhite = false;
         // 跳过不需要验证的白名单路径
@@ -64,7 +77,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
                 break;
             }
         }
-        if (isWhite){
+        if (isWhite) {
             return chain.filter(exchange);
         }
 
@@ -82,7 +95,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
             if (StringUtils.isBlank(claims)) {
                 return ResponseUtils.writeErrorInfo(response, ResultCode.ACCESS_UNAUTHORIZED);
             }
-            log.debug("令牌解析payload:{}", claims);
+            log.info("令牌解析payload:{}", claims);
             JSONObject jsonPayload = JSONUtil.parseObj(claims);
 //            String environment = jsonPayload.getStr(SecurityConstants.ENVIRONMENT_KEY);
 //            String[] actives = SpringUtil.getActiveProfiles();
@@ -101,7 +114,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
             }
 
 
-            long expire = 1111L;//jsonPayload.getLong(AccessTokenConverter.EXP);
+            long expire = jsonPayload.getLong(EXP);
             long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
             if (expire <= currentSecond) {
                 log.warn("登录状态已过期:令牌为{}", token);
@@ -113,7 +126,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 
         String payload = StringUtils.EMPTY;
         try {
-            payload =  URLEncoder.encode(claims, StandardCharsets.UTF_8.name());
+            payload = URLEncoder.encode(claims, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             log.error("令牌验证失败,用户详情为{}", claims);
             return ResponseUtils.writeErrorInfo(response, ResultCode.TOKEN_INVALID_OR_EXPIRED);
@@ -143,11 +156,12 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
      */
     private String getToken(ServerHttpRequest request) {
         String token = request.getHeaders().getFirst(SecurityConstants.AUTHORIZATION_KEY);
-        if (StringUtils.isNotBlank(token) && token.startsWith(SecurityConstants.JWT_PREFIX)) {
+        if (StringUtils.isNotBlank(token) && StrUtil.startWithIgnoreCase(token, SecurityConstants.JWT_PREFIX)) {
             token = StrUtil.replaceIgnoreCase(token, SecurityConstants.JWT_PREFIX, Strings.EMPTY);
         }
         return token;
     }
+
     @Override
     public int getOrder() {
         return -200;

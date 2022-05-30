@@ -119,6 +119,12 @@
             <artifactId>gdp-service-admin-api</artifactId>
             <version>${gdp.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.gdp</groupId>
+            <artifactId>gdp-service-common-web</artifactId>
+            <version>${gdp.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

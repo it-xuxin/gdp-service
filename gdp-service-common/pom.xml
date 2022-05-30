@@ -16,6 +16,7 @@
     <modules>
         <module>gdp-service-common-core</module>
         <module>gdp-service-common-redis</module>
+        <module>gdp-service-common-web</module>
     </modules>
 
 

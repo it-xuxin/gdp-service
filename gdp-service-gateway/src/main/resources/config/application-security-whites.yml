@@ -5,3 +5,4 @@ spring:
       - /admin/api/v1/captcha/code
       - /auth/oauth/login/mobile/code
       - /auth/oauth/login/username/password
+      - /auth/oauth/token

@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.gdp</groupId>
             <artifactId>gdb-service-user-api</artifactId>
-            <version>1.0.0</version>
+            <version>${gdp.version}</version>
         </dependency>
 
         <dependency>

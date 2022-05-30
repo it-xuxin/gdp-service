@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,14 @@ public class CertifiedService {
 
     private final TokenEndpoint tokenEndpoint;
 
+    public OAuth2AccessToken loginByClientId(String username, String password) {
+        Map<String, String> parameters = Maps.newHashMap();
+        parameters.put("grant_type", "password");
+        parameters.put("username", username);
+        parameters.put("password", password);
+        return login(parameters);
+    }
+
     public OAuth2AccessToken loginByCode(String mobile, String code) {
         try {
             Map<String, String> parameters = Maps.newHashMap();
@@ -40,26 +49,18 @@ public class CertifiedService {
         }
     }
 
-    public OAuth2AccessToken loginByUsernamePassword(String username, String password, String code, String uuid){
-        try {
-            Map<String, String> parameters = Maps.newHashMap();
-            parameters.put("username", username);
-            parameters.put("password", password);
-            parameters.put("code", code);
-            parameters.put("uuid", uuid);
-            parameters.put("grant_type", "captcha");
-            return login(parameters);
-        } catch (Exception e) {
-            log.error("{}", Throwables.getStackTraceAsString(e));
-            throw new RuntimeException("Login by code error.");
-        }
+    public OAuth2AccessToken loginByUsernamePassword(String username, String password, String code, String uuid) {
+        Map<String, String> parameters = Maps.newHashMap();
+        parameters.put("username", username);
+        parameters.put("password", password);
+        parameters.put("code", code);
+        parameters.put("uuid", uuid);
+        parameters.put("grant_type", "captcha");
+        return login(parameters);
     }
 
 
-
-
-
-    private OAuth2AccessToken login(Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+    private OAuth2AccessToken login(Map<String, String> parameters) {
         /**
          * 获取登录认证的客户端ID
          *
@@ -86,12 +87,16 @@ public class CertifiedService {
          * 请求头自动填充，token必须原生返回，不能有任何包装，否则显示 undefined undefined
          * 账号/密码:  client_id/client_secret : client/123456
          */
-        if (SecurityConstants.TEST_CLIENT_ID.equals(clientId)) {
-            return tokenEndpoint.postAccessToken(token, parameters).getBody();
+        try {
+            if (SecurityConstants.TEST_CLIENT_ID.equals(clientId)) {
+                return tokenEndpoint.postAccessToken(token, parameters).getBody();
+            }
+            OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(token, parameters).getBody();
+            accessToken.getAdditionalInformation().clear();
+            return accessToken;
+        } catch (HttpRequestMethodNotSupportedException e) {
+            log.error("Request method not support. {}", e.getMessage());
         }
-
-        OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(token, parameters).getBody();
-        accessToken.getAdditionalInformation().clear();
-        return accessToken;
+        throw new RuntimeException("Runtime Exception.");
     }
 }

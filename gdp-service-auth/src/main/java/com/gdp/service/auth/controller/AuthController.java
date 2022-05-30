@@ -19,6 +19,17 @@ public class AuthController {
     private final CertifiedService certifiedService;
 
 
+    @ApiOperation(value = "OAuth2认证", notes = "接口文档使用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "clientId", defaultValue = "clientId", value = "clientId", required = true),
+            @ApiImplicitParam(name = "clientSecret", defaultValue = "123456", value = "clientSecret", required = true)
+    })
+    @PostMapping("/token")
+    public Object loginByClientId(@RequestParam String username,
+                                  @RequestParam String password) {
+        return certifiedService.loginByClientId(username, password);
+    }
+
     @ApiOperation(value = "OAuth2认证", notes = "手机验证码登录入口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile",  value = "手机号", required = true),

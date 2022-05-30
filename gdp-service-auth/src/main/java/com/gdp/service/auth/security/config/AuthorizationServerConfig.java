@@ -2,6 +2,7 @@ package com.gdp.service.auth.security.config;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.gdp.service.auth.security.core.userdetails.system.SysUserDetails;
 import com.gdp.service.auth.security.core.userdetails.system.SysUserDetailsServiceImpl;
 import com.gdp.service.auth.security.extension.captcha.CaptchaTokenGranter;
 import com.gdp.service.common.core.constant.GlobalConstants;
@@ -167,16 +168,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return (accessToken, authentication) -> {
             Map<String, Object> additionalInfo = MapUtil.newHashMap();
             Object principal = authentication.getUserAuthentication().getPrincipal();
-//            if (principal instanceof SysUserDetails) {
-//                SysUserDetails sysUserDetails = (SysUserDetails) principal;
-//                additionalInfo.put("userId", sysUserDetails.getUserId());
-//                additionalInfo.put("username", sysUserDetails.getUsername());
-//                additionalInfo.put("deptId", sysUserDetails.getDeptId());
-//                // 认证身份标识(username:用户名；)
-//                if (StrUtil.isNotBlank(sysUserDetails.getAuthenticationIdentity())) {
-//                    additionalInfo.put("authenticationIdentity", sysUserDetails.getAuthenticationIdentity());
-//                }
-//            } else
+            if (principal instanceof SysUserDetails) {
+                SysUserDetails sysUserDetails = (SysUserDetails) principal;
+                additionalInfo.put(GlobalConstants.HEADER_USER_ID, sysUserDetails.getUserId());
+                additionalInfo.put("username", sysUserDetails.getUsername());
+                additionalInfo.put("deptId", sysUserDetails.getDeptId());
+                // 认证身份标识(username:用户名；)
+                if (StrUtil.isNotBlank(sysUserDetails.getAuthenticationIdentity())) {
+                    additionalInfo.put("authenticationIdentity", sysUserDetails.getAuthenticationIdentity());
+                }
+            } else
                 if (principal instanceof AppUserDetails) {
                 AppUserDetails appUserDetails = (AppUserDetails) principal;
                 additionalInfo.put(GlobalConstants.HEADER_USER_ID, appUserDetails.getUserId());
