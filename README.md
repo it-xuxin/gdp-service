@@ -1,3 +1,11 @@
+# Nacos + Gateway + Security + Oauth2 项目
+
+## gdp-service-admin     > 后台管理系统
+## gdp-service-auth      > Auth认证中心
+## gdp-service-common    > 基础组件
+## gdp-service-gateway   > 网关
+## gdp-service-user      > 用户系统
+
 ## 启动 nacos
 ```
 cd gdp-service/document/nacos-docker
@@ -8,15 +16,7 @@ docker-compose -f example/standalone-derby.yaml up
 ```
 cd gdp-service/document/mysql
 ```
-## 目录说明
-```
-> gdp-service-admin     # 后台管理系统
-> gdp-service-auth      # Auth认证中心
-> gdp-service-common    # 基础组件
-> gdp-service-gateway   # 网关
-> gdp-service-user      # 用户系统
 
-```
 
 ## 请求
 
